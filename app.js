@@ -13,7 +13,7 @@ const port = 5000;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-sequelize.sync({force:false})
+sequelize.sync({force:true})
 app.use("/api", routes);
 
 app.listen(port, () => {
