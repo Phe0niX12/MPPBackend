@@ -2,10 +2,10 @@ import {Sequelize, DataTypes} from 'sequelize';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
 import "dotenv/config";
-export const sequelize = new Sequelize('railway','root','LEJtRulTVjPXCxfOWoOaatzPeLTsCRCI',{
-    host:'viaduct.proxy.rlwy.net',
+export const sequelize = new Sequelize('nodejs','root','sexyface12',{
+    host:'localhost',
     dialect:'mysql',
-    port: '59964'
+    port: '3307'
 })
 
 try {
@@ -191,6 +191,10 @@ export const User = sequelize.define("User",{
             notEmpty:true
         },
     },
+    token:{
+        type: DataTypes.STRING,
+        allowNull:true
+    }
 }
 )
 
@@ -236,12 +240,8 @@ export const signInUser = async (req, res) =>{
         const token = jwt.sign({id:user.id}, process.env.JWT_SECRET , {
             expiresIn:process.env.JWT_REFRESH_EXPIRATION
         });
-
-        res.status(200).send({
-            id:user.id,
-            name: user.name,
-            accessToken: token
-        });
+        User.update({id:user.id,name:user.name,password:user.password,token:token},{where:{id:user.id}});
+        res.send({token:token})
 
     }catch(err){
         console.log(err);
@@ -250,20 +250,31 @@ export const signInUser = async (req, res) =>{
 }
 
 export const verifyJwt = (req, res, next) => {
+
     const token = req.headers.authorization?.split(' ')[1];
-    console.log(token);
     if (!token) {
       return res.status(401).json({ message: 'Unauthorized - No token provided' });
     }
   
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = decoded; // Attach decoded user information to the request object
+      req.user = decoded;
+      req.token = token; // Attach decoded user information to the request object
       next(); // Call next middleware or route handler
     } catch (err) {
       console.error('JWT verification failed:', err.message);
       return res.status(401).json({ message: 'Unauthorized - Invalid token' });
     }
   };
-export default {getAll, get, create, update, deleteFarmer}
+
+  export const getUserByToken=async(req, res) =>{
+    const token = req.token;
+    const user = await User.findOne({where:{token:token}});
+    if(user){
+        res.status(200).json(user);
+    }else{
+        res.status(404).json({message: 'No user found'});
+    }
+  }
+export default {getAll, get, create, update, deleteFarmer, getUserByToken};
 

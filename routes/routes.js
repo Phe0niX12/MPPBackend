@@ -1,7 +1,7 @@
 import express from "express";
 import cow from "../controller/controllerCows.js";
 import farmers from "../controller/controllerFarmers.js";
-import {registerUser, signInUser, verifyJwt} from "../model/ModelSequalizer.js"
+import {getUserByToken, registerUser, signInUser, verifyJwt} from "../model/ModelSequalizer.js"
 const router = express.Router();
 
 router.get('/cow',cow.getAllCows);
@@ -18,5 +18,6 @@ router.delete('/farmer/:id',farmers.deleteFarmer);
 
 router.post('/sign-up', registerUser);
 router.post('/sign-in', signInUser);
+router.get('/private', verifyJwt, getUserByToken);
 
 export default router;
