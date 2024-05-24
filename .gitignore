@@ -61,7 +61,7 @@ web_modules/
 
 # Optional REPL history
 .node_repl_history
-.env
+
 # Output of 'npm pack'
 *.tgz
 
@@ -113,3 +113,7 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# env
+.env
+.env.test
