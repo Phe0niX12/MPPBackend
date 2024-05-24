@@ -2,10 +2,10 @@ import {Sequelize, DataTypes} from 'sequelize';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
 import "dotenv/config";
-export const sequelize = new Sequelize(railway,'root',LEJtRulTVjPXCxfOWoOaatzPeLTsCRCI,{
-    host:viaduct.proxy.rlwy.net,
+export const sequelize = new Sequelize('railway','root','LEJtRulTVjPXCxfOWoOaatzPeLTsCRCI',{
+    host:'viaduct.proxy.rlwy.net',
     dialect:'mysql',
-    port: 59964
+    port: '59964'
 })
 
 try {
